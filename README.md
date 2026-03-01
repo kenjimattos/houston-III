@@ -1,6 +1,25 @@
 # Houston III Portfolio (Local-First)
 
-Versão de portfólio com setup local simplificado em **1 comando**.
+Versão de portfólio de uma plataforma de gestão de escalas médicas, com setup local reproduzível em 1 comando.
+
+## Sobre o projeto
+
+O Houston III é uma aplicação para operação de plantões e escalas de equipes médicas.  
+Nesta versão de portfólio, o foco é demonstrar o fluxo de produto ponta a ponta em ambiente local:
+
+- gestão de grades (templates de escala)
+- geração e acompanhamento de plantões
+- atribuição de médicos (pré-cadastro) em vagas
+- navegação por múltiplos hospitais
+
+Todos os dados do demo são fictícios e sanitizados.
+
+## Stack
+
+- Next.js 15
+- React 18
+- Supabase (Postgres/Auth/Storage via Supabase CLI)
+- Docker
 
 ## Pré-requisitos
 
@@ -20,7 +39,7 @@ Esse comando:
 1. valida Node/Docker/Supabase CLI
 2. instala dependências (quando necessário)
 3. sobe o Supabase local
-4. executa `supabase db reset` com migrations + seed demo
+4. executa `supabase db reset` (migrations + seed demo)
 5. gera/atualiza `.env.local` automaticamente
 6. inicia o Next.js em `http://localhost:3000`
 
@@ -28,6 +47,16 @@ Esse comando:
 
 - Email: `demo@houston.local`
 - Senha: `demo123456`
+
+## O que explorar no demo
+
+- Dashboard e navegação principal autenticada
+- Grades:
+  - `Grade Clínica Geral - Semana Demo` (sem médicos atribuídos)
+  - grades mensais com plantões preenchidos
+  - grades por hospital (Central, Norte e Sul)
+- Plantões de janeiro, fevereiro e março de 2026
+- Cenário multi-hospital com médicos fictícios sem conflito de horário no mesmo dia
 
 ## Comandos úteis
 
@@ -37,26 +66,22 @@ npm run dev:demo        # setup completo + next dev
 npm run supabase:reset  # reseta banco local (migrations + seed)
 ```
 
-## Integrações opcionais
+## Estrutura de dados demo
 
-### Google Maps
+O seed contempla:
 
-`NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` é opcional.
-
-- Sem chave: a aplicação continua funcional e mostra fallback textual nos componentes de mapa/autocomplete.
-- Com chave: autocomplete e mapa são habilitados.
-
-### Twilio / Resend / Firebase (Supabase Edge)
-
-Para testes de funcionalidades de SMS/e-mail/push via Edge Functions, configure `supabase/.env` localmente.
-Um template está disponível em `supabase/.env.example`.
-Essas integrações **não são necessárias** para subir e navegar no demo principal.
+- 3 hospitais fictícios
+- 1 usuário demo com role `gestor`
+- usuários mock de `coordenador` e `escalista` (somente para representação de dados)
+- médicos fictícios em `medicos_precadastro`
+- corpo clínico populado no grupo demo
+- grades e vagas com candidaturas aprovadas para simular operação real
 
 ## Troubleshooting
 
 ### Docker não está rodando
 
-Abra o Docker Desktop e rode novamente:
+Abra o Docker Desktop e rode:
 
 ```bash
 npm run setup:demo
@@ -64,7 +89,7 @@ npm run setup:demo
 
 ### Supabase CLI ausente
 
-Instale e tente novamente:
+Instale e rode novamente:
 
 ```bash
 brew install supabase/tap/supabase
@@ -74,7 +99,15 @@ brew install supabase/tap/supabase
 
 Pare serviços conflitantes ou ajuste portas no `supabase/config.toml` e no start do Next.
 
+### Ambiente inconsistente após alterações de seed
+
+Rode reset completo:
+
+```bash
+npm run supabase:reset
+```
+
 ## Observações
 
-- O seed é sanitizado para demonstração e não utiliza dados de produção.
-- `.env.local` é gerado automaticamente pelo script de bootstrap.
+- `.env.local` é gerado automaticamente pelo bootstrap.
+- Este repositório é uma edição de portfólio, separada do ambiente de produção.
