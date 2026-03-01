@@ -848,6 +848,39 @@ SET
   update_at = NOW(),
   update_by = EXCLUDED.update_by;
 
+-- Vínculo dos médicos fictícios no corpo clínico do grupo demo
+-- Estrutura esperada: medico_id = médico shadow + medico_precadastro_id preenchido
+INSERT INTO public.equipes_medicos (
+  equipe_id,
+  medico_id,
+  grupo_id,
+  updated_by,
+  updated_at,
+  medico_precadastro_id
+)
+SELECT
+  NULL,
+  '9cd29712-91b5-492f-86ff-41e38c7b03d5',
+  '22222222-2222-4222-8222-222222222222',
+  '11111111-1111-4111-8111-111111111111',
+  NOW(),
+  v.medico_precadastro_id
+FROM (
+  VALUES
+    ('f1111111-1111-4111-8111-111111111111'::uuid),
+    ('f2222222-2222-4222-8222-222222222222'::uuid),
+    ('f3333333-3333-4333-8333-333333333333'::uuid),
+    ('f4444444-4444-4444-8444-444444444444'::uuid)
+) AS v(medico_precadastro_id)
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM public.equipes_medicos em
+  WHERE em.grupo_id = '22222222-2222-4222-8222-222222222222'::uuid
+    AND em.medico_id = '9cd29712-91b5-492f-86ff-41e38c7b03d5'::uuid
+    AND em.medico_precadastro_id = v.medico_precadastro_id
+    AND em.equipe_id IS NULL
+);
+
 -- -----------------------------------------------------------------------------
 -- Grade demo + plantões gerados por grade
 -- -----------------------------------------------------------------------------
