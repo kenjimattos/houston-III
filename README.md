@@ -77,6 +77,18 @@ O seed contempla:
 - corpo clínico populado no grupo demo
 - grades e vagas com candidaturas aprovadas para simular operação real
 
+## Integrações opcionais
+
+### Google Maps
+
+`NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` é opcional.
+
+- sem chave: a aplicação continua funcional com fallback textual
+- com chave: autocomplete/mapa são habilitados
+
+Essa integração **não é obrigatória** para o fluxo principal do demo.
+Mas, habilita a criação de novos hospitais na execução da aplicação local.
+
 ## Troubleshooting
 
 ### Docker não está rodando
