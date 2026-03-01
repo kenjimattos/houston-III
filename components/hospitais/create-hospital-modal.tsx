@@ -21,6 +21,7 @@ import { BadgeAlertIcon, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import Cropper from "react-easy-crop";
 import { v4 as uuidv4 } from "uuid";
+import { isGoogleMapsConfigured } from "@/services/googleMapsService";
 
 interface CreateHospitalModalProps {
   open: boolean;
@@ -42,6 +43,7 @@ export function CreateHospitalModal({
   editData,
   onUpdateHospital,
 }: CreateHospitalModalProps) {
+  const mapsConfigured = isGoogleMapsConfigured();
   const [searchValue, setSearchValue] = useState("");
   const [nome, setNome] = useState("");
   const [tempAddressData, setTempAddressData] = useState<{
@@ -268,6 +270,17 @@ export function CreateHospitalModal({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    if (!editMode && !mapsConfigured) {
+      toast({
+        title: "Google Maps API Key não configurada",
+        description:
+          "Para criar hospitais, configure NEXT_PUBLIC_GOOGLE_MAPS_API_KEY no .env.local e reinicie o servidor.",
+        variant: "destructive",
+        icon: BadgeAlertIcon,
+      });
+      return;
+    }
+
     // Validar se tem foto (novo arquivo ou existente em modo edição)
     if (!avatarFile && !existingAvatarUrl) {
       toast({
@@ -433,6 +446,12 @@ export function CreateHospitalModal({
 
   // Determinar qual imagem mostrar no preview
   const imageToShow = avatarPreview || existingAvatarUrl;
+  const isLocationRequiredForDisable = mapsConfigured || editMode;
+  const isSubmitDisabled =
+    loading ||
+    (isLocationRequiredForDisable &&
+      (!latitude || !longitude || !tempAddressData)) ||
+    (!avatarFile && !existingAvatarUrl);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -455,6 +474,11 @@ export function CreateHospitalModal({
             <p className="text-xs text-gray-500">
               Ex: &#34;Hospital Sírio-Libanês&#34;, &#34;Rua Augusta 1234, São Paulo&#34; ou &#34;01310-100&#34;
             </p>
+            {!mapsConfigured && !editMode && (
+              <p className="text-xs text-red-500">
+                Configure `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` no `.env.local` para habilitar a criação de hospitais.
+              </p>
+            )}
           </div>
 
           {/* Preview do Endereço (read-only) */}
@@ -570,13 +594,7 @@ export function CreateHospitalModal({
           <DialogFooter>
             <Button
               type="submit"
-              disabled={
-                loading ||
-                !latitude ||
-                !longitude ||
-                !tempAddressData ||
-                (!avatarFile && !existingAvatarUrl)
-              }
+              disabled={isSubmitDisabled}
               className="w-full mx-auto mt-4 mb-2"
             >
               {loading ? "Salvando..." : "Salvar"}
