@@ -65,6 +65,7 @@ npm run setup:demo      # prepara ambiente local sem iniciar o Next
 npm run dev:demo        # setup completo + next dev
 npm run supabase:reset  # reseta banco local (migrations + seed)
 npm run stop:demo       # para Supabase local e limpa volumes + imagens do stack
+npm run stop:demo:aggressive # limpeza agressiva: remove também imagens supabase/* globais
 ```
 
 ## Encerrar e limpar ambiente local
@@ -86,6 +87,7 @@ Importante:
 - É uma limpeza destrutiva do ambiente local de demo.
 - Na próxima execução de `npm run dev:demo`, as imagens podem ser baixadas novamente e o banco será recriado do zero.
 - Se alguma imagem estiver em uso por outro projeto, ela não será removida (o script segue normalmente).
+- Para forçar uma limpeza maior, use `npm run stop:demo:aggressive`.
 
 ## Estrutura de dados demo
 

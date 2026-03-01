@@ -13,7 +13,8 @@
     "setup:demo": "node scripts/bootstrap-demo.mjs",
     "dev:demo": "npm run setup:demo && next dev",
     "supabase:reset": "supabase db reset --local --yes",
-    "stop:demo": "node scripts/teardown-demo.mjs"
+    "stop:demo": "node scripts/teardown-demo.mjs",
+    "stop:demo:aggressive": "node scripts/teardown-demo.mjs --aggressive"
   },
   "dependencies": {
     "@dnd-kit/core": "latest",

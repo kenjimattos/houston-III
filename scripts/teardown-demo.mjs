@@ -75,12 +75,48 @@ function removeImages(images) {
 
   for (const image of images) {
     try {
-      runInherit(`docker image rm ${image}`);
+      runInherit(`docker image rm -f ${image}`);
     } catch (error) {
       console.log(
         `[teardown-demo] Aviso: não foi possível remover imagem ${image} (pode estar em uso por outro projeto).`
       );
     }
+  }
+}
+
+function removeAllSupabaseImages() {
+  try {
+    const ids = run(
+      `docker images --filter=reference='supabase/*' --format '{{.ID}}'`
+    )
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    if (ids.length === 0) {
+      console.log(
+        "[teardown-demo] Nenhuma imagem supabase/* encontrada para limpeza global."
+      );
+      return;
+    }
+
+    console.log(
+      `[teardown-demo] Removendo ${ids.length} imagem(ns) supabase/* (modo agressivo)...`
+    );
+
+    for (const id of ids) {
+      try {
+        runInherit(`docker image rm -f ${id}`);
+      } catch {
+        console.log(
+          `[teardown-demo] Aviso: não foi possível remover imagem ${id}.`
+        );
+      }
+    }
+  } catch {
+    console.log(
+      "[teardown-demo] Aviso: falha ao listar imagens supabase/* para limpeza global."
+    );
   }
 }
 
@@ -101,6 +137,7 @@ function main() {
 
   const projectId = getProjectId();
   const images = parseComposeImages();
+  const aggressive = process.argv.includes("--aggressive");
 
   console.log(
     `[teardown-demo] Encerrando stack local do projeto "${projectId}" e removendo volumes...`
@@ -108,6 +145,9 @@ function main() {
   runInherit(`supabase stop --project-id ${projectId} --no-backup --yes`);
 
   removeImages(images);
+  if (aggressive) {
+    removeAllSupabaseImages();
+  }
 
   console.log(
     "[teardown-demo] Limpeza concluída. Containers, volumes e imagens do stack local foram processados."
