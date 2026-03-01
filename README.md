@@ -64,7 +64,28 @@ Esse comando:
 npm run setup:demo      # prepara ambiente local sem iniciar o Next
 npm run dev:demo        # setup completo + next dev
 npm run supabase:reset  # reseta banco local (migrations + seed)
+npm run stop:demo       # para Supabase local e limpa volumes + imagens do stack
 ```
+
+## Encerrar e limpar ambiente local
+
+Para remover tudo que foi provisionado para o demo local (containers, volumes de banco e imagens do stack), rode:
+
+```bash
+npm run stop:demo
+```
+
+Esse comando:
+
+1. executa `supabase stop --no-backup` para encerrar o stack local
+2. remove os volumes de dados locais do Supabase
+3. tenta remover as imagens Docker usadas pelo stack deste projeto
+
+Importante:
+
+- É uma limpeza destrutiva do ambiente local de demo.
+- Na próxima execução de `npm run dev:demo`, as imagens podem ser baixadas novamente e o banco será recriado do zero.
+- Se alguma imagem estiver em uso por outro projeto, ela não será removida (o script segue normalmente).
 
 ## Estrutura de dados demo
 
