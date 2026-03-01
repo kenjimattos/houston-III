@@ -31,6 +31,9 @@ BEGIN;
 -- demo_medico_pre_2   = f2222222-2222-4222-8222-222222222222
 -- demo_medico_pre_3   = f3333333-3333-4333-8333-333333333333
 -- demo_medico_pre_4   = f4444444-4444-4444-8444-444444444444
+-- demo_grade_janfeb   = abababab-abab-4aba-8aba-abababababab
+-- demo_recor_janfeb   = acacacac-acac-4aca-8aca-acacacacacac
+-- demo_medico_shadow  = 9cd29712-91b5-492f-86ff-41e38c7b03d5
 
 -- -----------------------------------------------------------------------------
 -- Catálogos mínimos
@@ -222,6 +225,89 @@ VALUES (
   NOW(),
   NOW(),
   '5511990000000',
+  NOW(),
+  '',
+  '',
+  NULL,
+  '',
+  0,
+  NULL,
+  '',
+  NULL,
+  false,
+  NULL,
+  false
+)
+ON CONFLICT (id) DO UPDATE
+SET
+  email = EXCLUDED.email,
+  encrypted_password = EXCLUDED.encrypted_password,
+  email_confirmed_at = NOW(),
+  raw_app_meta_data = EXCLUDED.raw_app_meta_data,
+  raw_user_meta_data = EXCLUDED.raw_user_meta_data,
+  updated_at = NOW(),
+  phone = EXCLUDED.phone,
+  phone_confirmed_at = NOW();
+
+INSERT INTO auth.users (
+  instance_id,
+  id,
+  aud,
+  role,
+  email,
+  encrypted_password,
+  email_confirmed_at,
+  invited_at,
+  confirmation_token,
+  confirmation_sent_at,
+  recovery_token,
+  recovery_sent_at,
+  email_change_token_new,
+  email_change,
+  email_change_sent_at,
+  last_sign_in_at,
+  raw_app_meta_data,
+  raw_user_meta_data,
+  is_super_admin,
+  created_at,
+  updated_at,
+  phone,
+  phone_confirmed_at,
+  phone_change,
+  phone_change_token,
+  phone_change_sent_at,
+  email_change_token_current,
+  email_change_confirm_status,
+  banned_until,
+  reauthentication_token,
+  reauthentication_sent_at,
+  is_sso_user,
+  deleted_at,
+  is_anonymous
+)
+VALUES (
+  '00000000-0000-0000-0000-000000000000',
+  '9cd29712-91b5-492f-86ff-41e38c7b03d5',
+  'authenticated',
+  'authenticated',
+  'medico.shadow@houston.local',
+  crypt('mock-only-no-login', gen_salt('bf')),
+  NOW(),
+  NULL,
+  '',
+  NULL,
+  '',
+  NULL,
+  '',
+  '',
+  NULL,
+  NOW(),
+  '{"provider":"email","providers":["email"]}'::jsonb,
+  '{"email":"medico.shadow@houston.local","display_name":"Medico Precadastro","platform_origin":"portfolio-mock","data":{"display_name":"Medico Precadastro","platform_origin":"portfolio-mock","phone":"00000000000"}}'::jsonb,
+  false,
+  NOW(),
+  NOW(),
+  '5500000000000',
   NOW(),
   '',
   '',
@@ -682,6 +768,86 @@ SET
   created_by = EXCLUDED.created_by,
   estado = EXCLUDED.estado;
 
+-- Médico técnico "shadow" para suportar candidaturas de pré-cadastro
+-- (exigência do modelo: medico_id não nulo + medico_precadastro_id)
+INSERT INTO public.medicos (
+  id,
+  rqe,
+  genero,
+  cpf,
+  rg,
+  crm,
+  nome_faculdade,
+  tipo_faculdade,
+  primeiro_nome,
+  sobrenome,
+  email,
+  telefone,
+  data_nascimento,
+  logradouro,
+  numero,
+  bairro,
+  cidade,
+  estado,
+  pais,
+  cep,
+  created_at,
+  update_at,
+  update_by,
+  delete_at,
+  status,
+  total_plantoes,
+  especialidade_id,
+  ano_termino_especializacao,
+  ano_formatura,
+  tracking_privacy,
+  especialidade_nome
+)
+VALUES (
+  '9cd29712-91b5-492f-86ff-41e38c7b03d5',
+  'N/A',
+  'N/A',
+  '00000000000',
+  '000000000',
+  'CRM-SHADOW-PRECAD',
+  'N/A',
+  'N/A',
+  'Medico',
+  'Precadastro',
+  'medico.shadow@houston.local',
+  '5500000000000',
+  DATE '1990-01-01',
+  'N/A',
+  '0',
+  'N/A',
+  'São Paulo',
+  'SP',
+  'Brasil',
+  '00000-000',
+  NOW(),
+  NOW(),
+  'seed',
+  NULL,
+  'ativo',
+  0,
+  '44444444-4444-4444-8444-444444444444',
+  NULL,
+  NULL,
+  false,
+  'Clínica Geral (Demo)'
+)
+ON CONFLICT (id) DO UPDATE
+SET
+  crm = EXCLUDED.crm,
+  primeiro_nome = EXCLUDED.primeiro_nome,
+  sobrenome = EXCLUDED.sobrenome,
+  email = EXCLUDED.email,
+  telefone = EXCLUDED.telefone,
+  status = EXCLUDED.status,
+  especialidade_id = EXCLUDED.especialidade_id,
+  update_at = NOW(),
+  update_by = EXCLUDED.update_by;
+
 -- -----------------------------------------------------------------------------
 -- Grade demo + plantões gerados por grade
 -- -----------------------------------------------------------------------------
@@ -1039,5 +1205,268 @@ SET
   forma_recebimento_id = EXCLUDED.forma_recebimento_id,
   recorrencia_id = EXCLUDED.recorrencia_id,
   grade_id = EXCLUDED.grade_id;
+
+-- -----------------------------------------------------------------------------
+-- Grade Janeiro/Fevereiro 2026 + plantões preenchidos (sem conflito por médico)
+-- -----------------------------------------------------------------------------
+INSERT INTO public.grades (
+  id,
+  grupo_id,
+  nome,
+  especialidade_id,
+  setor_id,
+  hospital_id,
+  cor,
+  horario_inicial,
+  configuracao,
+  ordem,
+  created_at,
+  updated_at,
+  created_by,
+  updated_by
+)
+VALUES (
+  'abababab-abab-4aba-8aba-abababababab',
+  '22222222-2222-4222-8222-222222222222',
+  'Grade Jan/Fev 2026 - Clínica Geral',
+  '44444444-4444-4444-8444-444444444444',
+  '55555555-5555-4555-8555-555555555555',
+  '33333333-3333-4333-8333-333333333333',
+  '#16A34A',
+  7,
+  '{
+    "lineNames":{"0":"Jan-Fev 2026"},
+    "selectedDays":{"0":[true,false,true,false,true,false,false]},
+    "slotsByDay":{
+      "0":{
+        "0":[{"id":"janfeb-seg","startHour":7,"endHour":19,"vagasCount":1,"lineIndex":0,"rowIndex":0,"assignedVagas":[{"medicoId":"f1111111-1111-4111-8111-111111111111","medicoNome":"Ana Carvalho"}]}],
+        "1":[],
+        "2":[{"id":"janfeb-qua","startHour":7,"endHour":19,"vagasCount":1,"lineIndex":0,"rowIndex":0,"assignedVagas":[{"medicoId":"f2222222-2222-4222-8222-222222222222","medicoNome":"Bruno Mendes"}]}],
+        "3":[],
+        "4":[{"id":"janfeb-sex","startHour":7,"endHour":19,"vagasCount":1,"lineIndex":0,"rowIndex":0,"assignedVagas":[{"medicoId":"f3333333-3333-4333-8333-333333333333","medicoNome":"Camila Rocha"}]}],
+        "5":[],
+        "6":[]
+      }
+    },
+    "weekStartHours":{"0":7},
+    "dayRowCounts":{"0":{"0":1,"2":1,"4":1}},
+    "tipoCalculo":"valor_hora",
+    "valorPorHora":170,
+    "diasPagamento":"30dias",
+    "formaRecebimento":"88888888-8888-4888-8888-888888888888",
+    "tipoVaga":"77777777-7777-4777-8777-777777777777",
+    "observacoesPadrao":"Plantões de janeiro e fevereiro de 2026."
+  }'::jsonb,
+  1,
+  NOW(),
+  NOW(),
+  '12121212-1212-4121-8121-121212121212',
+  '12121212-1212-4121-8121-121212121212'
+)
+ON CONFLICT (id) DO UPDATE
+SET
+  nome = EXCLUDED.nome,
+  especialidade_id = EXCLUDED.especialidade_id,
+  setor_id = EXCLUDED.setor_id,
+  hospital_id = EXCLUDED.hospital_id,
+  cor = EXCLUDED.cor,
+  horario_inicial = EXCLUDED.horario_inicial,
+  configuracao = EXCLUDED.configuracao,
+  ordem = EXCLUDED.ordem,
+  updated_at = NOW(),
+  updated_by = EXCLUDED.updated_by;
+
+INSERT INTO public.vagas_recorrencias (
+  id,
+  created_at,
+  updated_at,
+  created_by,
+  data_inicio,
+  data_fim,
+  dias_semana,
+  observacoes
+)
+VALUES (
+  'acacacac-acac-4aca-8aca-acacacacacac',
+  NOW(),
+  NOW(),
+  '12121212-1212-4121-8121-121212121212',
+  DATE '2026-01-01',
+  DATE '2026-02-28',
+  ARRAY[1,3,5],
+  'Recorrência da grade Jan/Fev 2026.'
+)
+ON CONFLICT (id) DO UPDATE
+SET
+  updated_at = NOW(),
+  data_inicio = EXCLUDED.data_inicio,
+  data_fim = EXCLUDED.data_fim,
+  dias_semana = EXCLUDED.dias_semana,
+  observacoes = EXCLUDED.observacoes;
+
+WITH jan_fev_datas AS (
+  SELECT
+    d::date AS data_plantao,
+    ROW_NUMBER() OVER (ORDER BY d::date) AS rn
+  FROM generate_series(DATE '2026-01-01', DATE '2026-02-28', INTERVAL '1 day') AS d
+  WHERE EXTRACT(ISODOW FROM d) IN (1, 3, 5)
+),
+escala AS (
+  SELECT
+    data_plantao,
+    CASE ((rn - 1) % 4)
+      WHEN 0 THEN 'f1111111-1111-4111-8111-111111111111'::uuid
+      WHEN 1 THEN 'f2222222-2222-4222-8222-222222222222'::uuid
+      WHEN 2 THEN 'f3333333-3333-4333-8333-333333333333'::uuid
+      ELSE 'f4444444-4444-4444-8444-444444444444'::uuid
+    END AS medico_precadastro_id
+  FROM jan_fev_datas
+),
+vagas_base AS (
+  SELECT
+    data_plantao,
+    medico_precadastro_id,
+    (
+      substr(md5('demo-janfeb-vaga-' || data_plantao::text), 1, 8) || '-' ||
+      substr(md5('demo-janfeb-vaga-' || data_plantao::text), 9, 4) || '-4' ||
+      substr(md5('demo-janfeb-vaga-' || data_plantao::text), 14, 3) || '-a' ||
+      substr(md5('demo-janfeb-vaga-' || data_plantao::text), 18, 3) || '-' ||
+      substr(md5('demo-janfeb-vaga-' || data_plantao::text), 21, 12)
+    )::uuid AS vaga_id
+  FROM escala
+)
+INSERT INTO public.vagas (
+  id,
+  created_at,
+  updated_at,
+  updated_by,
+  data,
+  hospital_id,
+  especialidade_id,
+  setor_id,
+  periodo_id,
+  escalista_id,
+  tipos_vaga_id,
+  data_pagamento,
+  hora_inicio,
+  hora_fim,
+  valor,
+  observacoes,
+  status,
+  total_candidaturas,
+  grupo_id,
+  forma_recebimento_id,
+  recorrencia_id,
+  grade_id
+)
+SELECT
+  vaga_id,
+  NOW(),
+  NOW(),
+  '13131313-1313-4131-8131-131313131313',
+  data_plantao,
+  '33333333-3333-4333-8333-333333333333',
+  '44444444-4444-4444-8444-444444444444',
+  '55555555-5555-4555-8555-555555555555',
+  '66666666-6666-4666-8666-666666666666',
+  '13131313-1313-4131-8131-131313131313',
+  '77777777-7777-4777-8777-777777777777',
+  (data_plantao + 30),
+  '07:00:00',
+  '19:00:00',
+  1700,
+  'Plantão preenchido da grade Jan/Fev 2026.',
+  'fechada',
+  1,
+  '22222222-2222-4222-8222-222222222222',
+  '88888888-8888-4888-8888-888888888888',
+  'acacacac-acac-4aca-8aca-acacacacacac',
+  'abababab-abab-4aba-8aba-abababababab'
+FROM vagas_base
+ON CONFLICT (id) DO UPDATE
+SET
+  updated_at = NOW(),
+  updated_by = EXCLUDED.updated_by,
+  data = EXCLUDED.data,
+  data_pagamento = EXCLUDED.data_pagamento,
+  hora_inicio = EXCLUDED.hora_inicio,
+  hora_fim = EXCLUDED.hora_fim,
+  valor = EXCLUDED.valor,
+  observacoes = EXCLUDED.observacoes,
+  status = EXCLUDED.status,
+  total_candidaturas = EXCLUDED.total_candidaturas,
+  recorrencia_id = EXCLUDED.recorrencia_id,
+  grade_id = EXCLUDED.grade_id;
+
+WITH jan_fev_datas AS (
+  SELECT
+    d::date AS data_plantao,
+    ROW_NUMBER() OVER (ORDER BY d::date) AS rn
+  FROM generate_series(DATE '2026-01-01', DATE '2026-02-28', INTERVAL '1 day') AS d
+  WHERE EXTRACT(ISODOW FROM d) IN (1, 3, 5)
+),
+escala AS (
+  SELECT
+    data_plantao,
+    CASE ((rn - 1) % 4)
+      WHEN 0 THEN 'f1111111-1111-4111-8111-111111111111'::uuid
+      WHEN 1 THEN 'f2222222-2222-4222-8222-222222222222'::uuid
+      WHEN 2 THEN 'f3333333-3333-4333-8333-333333333333'::uuid
+      ELSE 'f4444444-4444-4444-8444-444444444444'::uuid
+    END AS medico_precadastro_id
+  FROM jan_fev_datas
+),
+candidaturas_base AS (
+  SELECT
+    data_plantao,
+    medico_precadastro_id,
+    (
+      substr(md5('demo-janfeb-vaga-' || data_plantao::text), 1, 8) || '-' ||
+      substr(md5('demo-janfeb-vaga-' || data_plantao::text), 9, 4) || '-4' ||
+      substr(md5('demo-janfeb-vaga-' || data_plantao::text), 14, 3) || '-a' ||
+      substr(md5('demo-janfeb-vaga-' || data_plantao::text), 18, 3) || '-' ||
+      substr(md5('demo-janfeb-vaga-' || data_plantao::text), 21, 12)
+    )::uuid AS vaga_id,
+    (
+      substr(md5('demo-janfeb-candidatura-' || data_plantao::text), 1, 8) || '-' ||
+      substr(md5('demo-janfeb-candidatura-' || data_plantao::text), 9, 4) || '-4' ||
+      substr(md5('demo-janfeb-candidatura-' || data_plantao::text), 14, 3) || '-a' ||
+      substr(md5('demo-janfeb-candidatura-' || data_plantao::text), 18, 3) || '-' ||
+      substr(md5('demo-janfeb-candidatura-' || data_plantao::text), 21, 12)
+    )::uuid AS candidatura_id
+  FROM escala
+)
+INSERT INTO public.candidaturas (
+  id,
+  created_at,
+  data_confirmacao,
+  medico_id,
+  vaga_id,
+  status,
+  updated_at,
+  updated_by,
+  vaga_valor,
+  medico_precadastro_id
+)
+SELECT
+  candidatura_id,
+  NOW(),
+  data_plantao,
+  '9cd29712-91b5-492f-86ff-41e38c7b03d5',
+  vaga_id,
+  'APROVADO',
+  NOW(),
+  '12121212-1212-4121-8121-121212121212',
+  1700,
+  medico_precadastro_id
+FROM candidaturas_base
+ON CONFLICT (id) DO UPDATE
+SET
+  data_confirmacao = EXCLUDED.data_confirmacao,
+  status = EXCLUDED.status,
+  updated_at = NOW(),
+  updated_by = EXCLUDED.updated_by,
+  vaga_valor = EXCLUDED.vaga_valor,
+  medico_precadastro_id = EXCLUDED.medico_precadastro_id;
 
 COMMIT;
