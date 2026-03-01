@@ -16,6 +16,8 @@ BEGIN;
 -- mock_escal_user_id  = 13131313-1313-4131-8131-131313131313
 -- demo_group_id       = 22222222-2222-4222-8222-222222222222
 -- demo_hospital_id    = 33333333-3333-4333-8333-333333333333
+-- demo_hospital_id_2  = 3a3a3a3a-3a3a-43a3-83a3-3a3a3a3a3a3a
+-- demo_hospital_id_3  = 3b3b3b3b-3b3b-43b3-83b3-3b3b3b3b3b3b
 -- demo_especialidade  = 44444444-4444-4444-8444-444444444444
 -- demo_setor_id       = 55555555-5555-4555-8555-555555555555
 -- demo_periodo_id     = 66666666-6666-4666-8666-666666666666
@@ -31,10 +33,18 @@ BEGIN;
 -- demo_medico_pre_2   = f2222222-2222-4222-8222-222222222222
 -- demo_medico_pre_3   = f3333333-3333-4333-8333-333333333333
 -- demo_medico_pre_4   = f4444444-4444-4444-8444-444444444444
+-- demo_medico_pre_5   = f5555555-5555-4555-8555-555555555555
+-- demo_medico_pre_6   = f6666666-6666-4666-8666-666666666666
+-- demo_medico_pre_7   = f7777777-7777-4777-8777-777777777777
+-- demo_medico_pre_8   = f8888888-8888-4888-8888-888888888888
 -- demo_grade_janfeb   = abababab-abab-4aba-8aba-abababababab
 -- demo_recor_janfeb   = acacacac-acac-4aca-8aca-acacacacacac
 -- demo_grade_marco    = adadadad-adad-4ada-8ada-adadadadadad
 -- demo_recor_marco    = aeaeaeae-aeae-4aea-8aea-aeaeaeaeaeae
+-- demo_grade_norte    = afafafaf-afaf-4afa-8afa-afafafafafaf
+-- demo_recor_norte    = bcbcbcbc-bcbc-4bcb-8bcb-bcbcbcbcbcbc
+-- demo_grade_sul      = cdcdcdcd-cdcd-4cdc-8cdc-cdcdcdcdcdcd
+-- demo_recor_sul      = dededede-dede-4ded-8ded-dededededede
 -- demo_medico_shadow  = 9cd29712-91b5-492f-86ff-41e38c7b03d5
 
 -- -----------------------------------------------------------------------------
@@ -146,6 +156,104 @@ VALUES (
   -23.561414,
   -46.656364,
   'Av. Paulista, 1000, Bela Vista, São Paulo - SP, 01310-100, Brasil',
+  NULL,
+  NOW(),
+  NOW()
+)
+ON CONFLICT (id) DO UPDATE
+SET
+  nome = EXCLUDED.nome,
+  logradouro = EXCLUDED.logradouro,
+  numero = EXCLUDED.numero,
+  cidade = EXCLUDED.cidade,
+  bairro = EXCLUDED.bairro,
+  estado = EXCLUDED.estado,
+  pais = EXCLUDED.pais,
+  cep = EXCLUDED.cep,
+  latitude = EXCLUDED.latitude,
+  longitude = EXCLUDED.longitude,
+  endereco_formatado = EXCLUDED.endereco_formatado,
+  updated_at = NOW();
+
+INSERT INTO public.hospitais (
+  id,
+  nome,
+  logradouro,
+  numero,
+  cidade,
+  bairro,
+  estado,
+  pais,
+  cep,
+  latitude,
+  longitude,
+  endereco_formatado,
+  avatar,
+  created_at,
+  updated_at
+)
+VALUES (
+  '3a3a3a3a-3a3a-43a3-83a3-3a3a3a3a3a3a',
+  'Hospital Demo Norte',
+  'Rua Voluntários da Pátria',
+  '4500',
+  'São Paulo',
+  'Santana',
+  'SP',
+  'Brasil',
+  '02010-200',
+  -23.505261,
+  -46.624587,
+  'Rua Voluntários da Pátria, 4500, Santana, São Paulo - SP, 02010-200, Brasil',
+  NULL,
+  NOW(),
+  NOW()
+)
+ON CONFLICT (id) DO UPDATE
+SET
+  nome = EXCLUDED.nome,
+  logradouro = EXCLUDED.logradouro,
+  numero = EXCLUDED.numero,
+  cidade = EXCLUDED.cidade,
+  bairro = EXCLUDED.bairro,
+  estado = EXCLUDED.estado,
+  pais = EXCLUDED.pais,
+  cep = EXCLUDED.cep,
+  latitude = EXCLUDED.latitude,
+  longitude = EXCLUDED.longitude,
+  endereco_formatado = EXCLUDED.endereco_formatado,
+  updated_at = NOW();
+
+INSERT INTO public.hospitais (
+  id,
+  nome,
+  logradouro,
+  numero,
+  cidade,
+  bairro,
+  estado,
+  pais,
+  cep,
+  latitude,
+  longitude,
+  endereco_formatado,
+  avatar,
+  created_at,
+  updated_at
+)
+VALUES (
+  '3b3b3b3b-3b3b-43b3-83b3-3b3b3b3b3b3b',
+  'Hospital Demo Sul',
+  'Av. Cupecê',
+  '2800',
+  'São Paulo',
+  'Cidade Ademar',
+  'SP',
+  'Brasil',
+  '04365-001',
+  -23.675149,
+  -46.642964,
+  'Av. Cupecê, 2800, Cidade Ademar, São Paulo - SP, 04365-001, Brasil',
   NULL,
   NOW(),
   NOW()
@@ -648,7 +756,11 @@ VALUES (
   '11111111-1111-4111-8111-111111111111',
   'gestor',
   ARRAY['22222222-2222-4222-8222-222222222222']::uuid[],
-  ARRAY['33333333-3333-4333-8333-333333333333']::uuid[],
+  ARRAY[
+    '33333333-3333-4333-8333-333333333333',
+    '3a3a3a3a-3a3a-43a3-83a3-3a3a3a3a3a3a',
+    '3b3b3b3b-3b3b-43b3-83b3-3b3b3b3b3b3b'
+  ]::uuid[],
   ARRAY['55555555-5555-4555-8555-555555555555']::uuid[]
 )
 ON CONFLICT (user_id, role) DO UPDATE
@@ -666,7 +778,11 @@ VALUES (
   '12121212-1212-4121-8121-121212121212',
   'coordenador',
   ARRAY['22222222-2222-4222-8222-222222222222']::uuid[],
-  ARRAY['33333333-3333-4333-8333-333333333333']::uuid[],
+  ARRAY[
+    '33333333-3333-4333-8333-333333333333',
+    '3a3a3a3a-3a3a-43a3-83a3-3a3a3a3a3a3a',
+    '3b3b3b3b-3b3b-43b3-83b3-3b3b3b3b3b3b'
+  ]::uuid[],
   ARRAY['55555555-5555-4555-8555-555555555555']::uuid[]
 )
 ON CONFLICT (user_id, role) DO UPDATE
@@ -684,7 +800,11 @@ VALUES (
   '13131313-1313-4131-8131-131313131313',
   'escalista',
   ARRAY['22222222-2222-4222-8222-222222222222']::uuid[],
-  ARRAY['33333333-3333-4333-8333-333333333333']::uuid[],
+  ARRAY[
+    '33333333-3333-4333-8333-333333333333',
+    '3a3a3a3a-3a3a-43a3-83a3-3a3a3a3a3a3a',
+    '3b3b3b3b-3b3b-43b3-83b3-3b3b3b3b3b3b'
+  ]::uuid[],
   ARRAY['55555555-5555-4555-8555-555555555555']::uuid[]
 )
 ON CONFLICT (user_id, role) DO UPDATE
@@ -753,6 +873,54 @@ VALUES (
   '11111111104',
   'diego.almeida.demo@houston.local',
   '11981110004',
+  '44444444-4444-4444-8444-444444444444',
+  '12121212-1212-4121-8121-121212121212',
+  NOW(),
+  'SP'
+), (
+  'f5555555-5555-4555-8555-555555555555',
+  'Elisa',
+  'Ferraz',
+  '2005',
+  '11111111105',
+  'elisa.ferraz.demo@houston.local',
+  '11981110005',
+  '44444444-4444-4444-8444-444444444444',
+  '12121212-1212-4121-8121-121212121212',
+  NOW(),
+  'SP'
+), (
+  'f6666666-6666-4666-8666-666666666666',
+  'Fernando',
+  'Lima',
+  '2006',
+  '11111111106',
+  'fernando.lima.demo@houston.local',
+  '11981110006',
+  '44444444-4444-4444-8444-444444444444',
+  '12121212-1212-4121-8121-121212121212',
+  NOW(),
+  'SP'
+), (
+  'f7777777-7777-4777-8777-777777777777',
+  'Gabriela',
+  'Souza',
+  '2007',
+  '11111111107',
+  'gabriela.souza.demo@houston.local',
+  '11981110007',
+  '44444444-4444-4444-8444-444444444444',
+  '12121212-1212-4121-8121-121212121212',
+  NOW(),
+  'SP'
+), (
+  'f8888888-8888-4888-8888-888888888888',
+  'Henrique',
+  'Barros',
+  '2008',
+  '11111111108',
+  'henrique.barros.demo@houston.local',
+  '11981110008',
   '44444444-4444-4444-8444-444444444444',
   '12121212-1212-4121-8121-121212121212',
   NOW(),
@@ -872,7 +1040,11 @@ FROM (
     ('f1111111-1111-4111-8111-111111111111'::uuid),
     ('f2222222-2222-4222-8222-222222222222'::uuid),
     ('f3333333-3333-4333-8333-333333333333'::uuid),
-    ('f4444444-4444-4444-8444-444444444444'::uuid)
+    ('f4444444-4444-4444-8444-444444444444'::uuid),
+    ('f5555555-5555-4555-8555-555555555555'::uuid),
+    ('f6666666-6666-4666-8666-666666666666'::uuid),
+    ('f7777777-7777-4777-8777-777777777777'::uuid),
+    ('f8888888-8888-4888-8888-888888888888'::uuid)
 ) AS v(medico_precadastro_id)
 WHERE NOT EXISTS (
   SELECT 1
@@ -1743,6 +1915,468 @@ SELECT
   1750,
   medico_precadastro_id
 FROM candidaturas_marco
+ON CONFLICT (id) DO UPDATE
+SET
+  data_confirmacao = EXCLUDED.data_confirmacao,
+  status = EXCLUDED.status,
+  updated_at = NOW(),
+  updated_by = EXCLUDED.updated_by,
+  vaga_valor = EXCLUDED.vaga_valor,
+  medico_precadastro_id = EXCLUDED.medico_precadastro_id;
+
+-- -----------------------------------------------------------------------------
+-- Grade Março 2026 - Hospital Norte (terça) + plantões preenchidos
+-- -----------------------------------------------------------------------------
+INSERT INTO public.grades (
+  id,
+  grupo_id,
+  nome,
+  especialidade_id,
+  setor_id,
+  hospital_id,
+  cor,
+  horario_inicial,
+  configuracao,
+  ordem,
+  created_at,
+  updated_at,
+  created_by,
+  updated_by
+)
+VALUES (
+  'afafafaf-afaf-4afa-8afa-afafafafafaf',
+  '22222222-2222-4222-8222-222222222222',
+  'Grade Março 2026 - Hospital Norte',
+  '44444444-4444-4444-8444-444444444444',
+  '55555555-5555-4555-8555-555555555555',
+  '3a3a3a3a-3a3a-43a3-83a3-3a3a3a3a3a3a',
+  '#0284C7',
+  7,
+  '{
+    "lineNames":{"0":"Hospital Norte"},
+    "selectedDays":{"0":[false,true,false,false,false,false,false]},
+    "slotsByDay":{"0":{"0":[],"1":[{"id":"norte-ter","startHour":7,"endHour":19,"vagasCount":1,"lineIndex":0,"rowIndex":0,"assignedVagas":[]}],"2":[],"3":[],"4":[],"5":[],"6":[]}},
+    "weekStartHours":{"0":7},
+    "dayRowCounts":{"0":{"1":1}},
+    "tipoCalculo":"valor_hora",
+    "valorPorHora":185,
+    "diasPagamento":"30dias",
+    "formaRecebimento":"88888888-8888-4888-8888-888888888888",
+    "tipoVaga":"77777777-7777-4777-8777-777777777777",
+    "observacoesPadrao":"Plantões de terça no Hospital Norte."
+  }'::jsonb,
+  3,
+  NOW(),
+  NOW(),
+  '12121212-1212-4121-8121-121212121212',
+  '12121212-1212-4121-8121-121212121212'
+)
+ON CONFLICT (id) DO UPDATE
+SET
+  nome = EXCLUDED.nome,
+  hospital_id = EXCLUDED.hospital_id,
+  configuracao = EXCLUDED.configuracao,
+  ordem = EXCLUDED.ordem,
+  updated_at = NOW(),
+  updated_by = EXCLUDED.updated_by;
+
+INSERT INTO public.vagas_recorrencias (
+  id,
+  created_at,
+  updated_at,
+  created_by,
+  data_inicio,
+  data_fim,
+  dias_semana,
+  observacoes
+)
+VALUES (
+  'bcbcbcbc-bcbc-4bcb-8bcb-bcbcbcbcbcbc',
+  NOW(),
+  NOW(),
+  '12121212-1212-4121-8121-121212121212',
+  DATE '2026-03-01',
+  DATE '2026-03-31',
+  ARRAY[2],
+  'Recorrência da grade Março 2026 - Hospital Norte.'
+)
+ON CONFLICT (id) DO UPDATE
+SET
+  updated_at = NOW(),
+  data_inicio = EXCLUDED.data_inicio,
+  data_fim = EXCLUDED.data_fim,
+  dias_semana = EXCLUDED.dias_semana,
+  observacoes = EXCLUDED.observacoes;
+
+WITH norte_datas AS (
+  SELECT d::date AS data_plantao, ROW_NUMBER() OVER (ORDER BY d::date) AS rn
+  FROM generate_series(DATE '2026-03-01', DATE '2026-03-31', INTERVAL '1 day') AS d
+  WHERE EXTRACT(ISODOW FROM d) = 2
+),
+norte_base AS (
+  SELECT
+    data_plantao,
+    rn,
+    (
+      substr(md5('demo-norte-vaga-' || data_plantao::text), 1, 8) || '-' ||
+      substr(md5('demo-norte-vaga-' || data_plantao::text), 9, 4) || '-4' ||
+      substr(md5('demo-norte-vaga-' || data_plantao::text), 14, 3) || '-a' ||
+      substr(md5('demo-norte-vaga-' || data_plantao::text), 18, 3) || '-' ||
+      substr(md5('demo-norte-vaga-' || data_plantao::text), 21, 12)
+    )::uuid AS vaga_id,
+    CASE ((rn - 1) % 2)
+      WHEN 0 THEN 'f5555555-5555-4555-8555-555555555555'::uuid
+      ELSE 'f6666666-6666-4666-8666-666666666666'::uuid
+    END AS medico_precadastro_id
+  FROM norte_datas
+)
+INSERT INTO public.vagas (
+  id,
+  created_at,
+  updated_at,
+  updated_by,
+  data,
+  hospital_id,
+  especialidade_id,
+  setor_id,
+  periodo_id,
+  escalista_id,
+  tipos_vaga_id,
+  data_pagamento,
+  hora_inicio,
+  hora_fim,
+  valor,
+  observacoes,
+  status,
+  total_candidaturas,
+  grupo_id,
+  forma_recebimento_id,
+  recorrencia_id,
+  grade_id
+)
+SELECT
+  vaga_id,
+  NOW(),
+  NOW(),
+  '13131313-1313-4131-8131-131313131313',
+  data_plantao,
+  '3a3a3a3a-3a3a-43a3-83a3-3a3a3a3a3a3a',
+  '44444444-4444-4444-8444-444444444444',
+  '55555555-5555-4555-8555-555555555555',
+  '66666666-6666-4666-8666-666666666666',
+  '13131313-1313-4131-8131-131313131313',
+  '77777777-7777-4777-8777-777777777777',
+  (data_plantao + 30),
+  '07:00:00',
+  '19:00:00',
+  1850,
+  'Plantão de março - Hospital Norte.',
+  'fechada',
+  1,
+  '22222222-2222-4222-8222-222222222222',
+  '88888888-8888-4888-8888-888888888888',
+  'bcbcbcbc-bcbc-4bcb-8bcb-bcbcbcbcbcbc',
+  'afafafaf-afaf-4afa-8afa-afafafafafaf'
+FROM norte_base
+ON CONFLICT (id) DO UPDATE
+SET
+  updated_at = NOW(),
+  updated_by = EXCLUDED.updated_by,
+  data = EXCLUDED.data,
+  data_pagamento = EXCLUDED.data_pagamento,
+  hora_inicio = EXCLUDED.hora_inicio,
+  hora_fim = EXCLUDED.hora_fim,
+  valor = EXCLUDED.valor,
+  observacoes = EXCLUDED.observacoes,
+  status = EXCLUDED.status,
+  total_candidaturas = EXCLUDED.total_candidaturas,
+  hospital_id = EXCLUDED.hospital_id,
+  recorrencia_id = EXCLUDED.recorrencia_id,
+  grade_id = EXCLUDED.grade_id;
+
+WITH norte_datas AS (
+  SELECT d::date AS data_plantao, ROW_NUMBER() OVER (ORDER BY d::date) AS rn
+  FROM generate_series(DATE '2026-03-01', DATE '2026-03-31', INTERVAL '1 day') AS d
+  WHERE EXTRACT(ISODOW FROM d) = 2
+),
+norte_candidaturas AS (
+  SELECT
+    data_plantao,
+    (
+      substr(md5('demo-norte-vaga-' || data_plantao::text), 1, 8) || '-' ||
+      substr(md5('demo-norte-vaga-' || data_plantao::text), 9, 4) || '-4' ||
+      substr(md5('demo-norte-vaga-' || data_plantao::text), 14, 3) || '-a' ||
+      substr(md5('demo-norte-vaga-' || data_plantao::text), 18, 3) || '-' ||
+      substr(md5('demo-norte-vaga-' || data_plantao::text), 21, 12)
+    )::uuid AS vaga_id,
+    (
+      substr(md5('demo-norte-candidatura-' || data_plantao::text), 1, 8) || '-' ||
+      substr(md5('demo-norte-candidatura-' || data_plantao::text), 9, 4) || '-4' ||
+      substr(md5('demo-norte-candidatura-' || data_plantao::text), 14, 3) || '-a' ||
+      substr(md5('demo-norte-candidatura-' || data_plantao::text), 18, 3) || '-' ||
+      substr(md5('demo-norte-candidatura-' || data_plantao::text), 21, 12)
+    )::uuid AS candidatura_id,
+    CASE ((rn - 1) % 2)
+      WHEN 0 THEN 'f5555555-5555-4555-8555-555555555555'::uuid
+      ELSE 'f6666666-6666-4666-8666-666666666666'::uuid
+    END AS medico_precadastro_id
+  FROM norte_datas
+)
+INSERT INTO public.candidaturas (
+  id,
+  created_at,
+  data_confirmacao,
+  medico_id,
+  vaga_id,
+  status,
+  updated_at,
+  updated_by,
+  vaga_valor,
+  medico_precadastro_id
+)
+SELECT
+  candidatura_id,
+  NOW(),
+  data_plantao,
+  '9cd29712-91b5-492f-86ff-41e38c7b03d5',
+  vaga_id,
+  'APROVADO',
+  NOW(),
+  '12121212-1212-4121-8121-121212121212',
+  1850,
+  medico_precadastro_id
+FROM norte_candidaturas
+ON CONFLICT (id) DO UPDATE
+SET
+  data_confirmacao = EXCLUDED.data_confirmacao,
+  status = EXCLUDED.status,
+  updated_at = NOW(),
+  updated_by = EXCLUDED.updated_by,
+  vaga_valor = EXCLUDED.vaga_valor,
+  medico_precadastro_id = EXCLUDED.medico_precadastro_id;
+
+-- -----------------------------------------------------------------------------
+-- Grade Março 2026 - Hospital Sul (quinta) + plantões preenchidos
+-- -----------------------------------------------------------------------------
+INSERT INTO public.grades (
+  id,
+  grupo_id,
+  nome,
+  especialidade_id,
+  setor_id,
+  hospital_id,
+  cor,
+  horario_inicial,
+  configuracao,
+  ordem,
+  created_at,
+  updated_at,
+  created_by,
+  updated_by
+)
+VALUES (
+  'cdcdcdcd-cdcd-4cdc-8cdc-cdcdcdcdcdcd',
+  '22222222-2222-4222-8222-222222222222',
+  'Grade Março 2026 - Hospital Sul',
+  '44444444-4444-4444-8444-444444444444',
+  '55555555-5555-4555-8555-555555555555',
+  '3b3b3b3b-3b3b-43b3-83b3-3b3b3b3b3b3b',
+  '#BE123C',
+  7,
+  '{
+    "lineNames":{"0":"Hospital Sul"},
+    "selectedDays":{"0":[false,false,false,true,false,false,false]},
+    "slotsByDay":{"0":{"0":[],"1":[],"2":[],"3":[{"id":"sul-qui","startHour":7,"endHour":19,"vagasCount":1,"lineIndex":0,"rowIndex":0,"assignedVagas":[]}],"4":[],"5":[],"6":[]}},
+    "weekStartHours":{"0":7},
+    "dayRowCounts":{"0":{"3":1}},
+    "tipoCalculo":"valor_hora",
+    "valorPorHora":188,
+    "diasPagamento":"30dias",
+    "formaRecebimento":"88888888-8888-4888-8888-888888888888",
+    "tipoVaga":"77777777-7777-4777-8777-777777777777",
+    "observacoesPadrao":"Plantões de quinta no Hospital Sul."
+  }'::jsonb,
+  4,
+  NOW(),
+  NOW(),
+  '12121212-1212-4121-8121-121212121212',
+  '12121212-1212-4121-8121-121212121212'
+)
+ON CONFLICT (id) DO UPDATE
+SET
+  nome = EXCLUDED.nome,
+  hospital_id = EXCLUDED.hospital_id,
+  configuracao = EXCLUDED.configuracao,
+  ordem = EXCLUDED.ordem,
+  updated_at = NOW(),
+  updated_by = EXCLUDED.updated_by;
+
+INSERT INTO public.vagas_recorrencias (
+  id,
+  created_at,
+  updated_at,
+  created_by,
+  data_inicio,
+  data_fim,
+  dias_semana,
+  observacoes
+)
+VALUES (
+  'dededede-dede-4ded-8ded-dededededede',
+  NOW(),
+  NOW(),
+  '12121212-1212-4121-8121-121212121212',
+  DATE '2026-03-01',
+  DATE '2026-03-31',
+  ARRAY[4],
+  'Recorrência da grade Março 2026 - Hospital Sul.'
+)
+ON CONFLICT (id) DO UPDATE
+SET
+  updated_at = NOW(),
+  data_inicio = EXCLUDED.data_inicio,
+  data_fim = EXCLUDED.data_fim,
+  dias_semana = EXCLUDED.dias_semana,
+  observacoes = EXCLUDED.observacoes;
+
+WITH sul_datas AS (
+  SELECT d::date AS data_plantao, ROW_NUMBER() OVER (ORDER BY d::date) AS rn
+  FROM generate_series(DATE '2026-03-01', DATE '2026-03-31', INTERVAL '1 day') AS d
+  WHERE EXTRACT(ISODOW FROM d) = 4
+),
+sul_base AS (
+  SELECT
+    data_plantao,
+    rn,
+    (
+      substr(md5('demo-sul-vaga-' || data_plantao::text), 1, 8) || '-' ||
+      substr(md5('demo-sul-vaga-' || data_plantao::text), 9, 4) || '-4' ||
+      substr(md5('demo-sul-vaga-' || data_plantao::text), 14, 3) || '-a' ||
+      substr(md5('demo-sul-vaga-' || data_plantao::text), 18, 3) || '-' ||
+      substr(md5('demo-sul-vaga-' || data_plantao::text), 21, 12)
+    )::uuid AS vaga_id,
+    CASE ((rn - 1) % 2)
+      WHEN 0 THEN 'f7777777-7777-4777-8777-777777777777'::uuid
+      ELSE 'f8888888-8888-4888-8888-888888888888'::uuid
+    END AS medico_precadastro_id
+  FROM sul_datas
+)
+INSERT INTO public.vagas (
+  id,
+  created_at,
+  updated_at,
+  updated_by,
+  data,
+  hospital_id,
+  especialidade_id,
+  setor_id,
+  periodo_id,
+  escalista_id,
+  tipos_vaga_id,
+  data_pagamento,
+  hora_inicio,
+  hora_fim,
+  valor,
+  observacoes,
+  status,
+  total_candidaturas,
+  grupo_id,
+  forma_recebimento_id,
+  recorrencia_id,
+  grade_id
+)
+SELECT
+  vaga_id,
+  NOW(),
+  NOW(),
+  '13131313-1313-4131-8131-131313131313',
+  data_plantao,
+  '3b3b3b3b-3b3b-43b3-83b3-3b3b3b3b3b3b',
+  '44444444-4444-4444-8444-444444444444',
+  '55555555-5555-4555-8555-555555555555',
+  '66666666-6666-4666-8666-666666666666',
+  '13131313-1313-4131-8131-131313131313',
+  '77777777-7777-4777-8777-777777777777',
+  (data_plantao + 30),
+  '07:00:00',
+  '19:00:00',
+  1880,
+  'Plantão de março - Hospital Sul.',
+  'fechada',
+  1,
+  '22222222-2222-4222-8222-222222222222',
+  '88888888-8888-4888-8888-888888888888',
+  'dededede-dede-4ded-8ded-dededededede',
+  'cdcdcdcd-cdcd-4cdc-8cdc-cdcdcdcdcdcd'
+FROM sul_base
+ON CONFLICT (id) DO UPDATE
+SET
+  updated_at = NOW(),
+  updated_by = EXCLUDED.updated_by,
+  data = EXCLUDED.data,
+  data_pagamento = EXCLUDED.data_pagamento,
+  hora_inicio = EXCLUDED.hora_inicio,
+  hora_fim = EXCLUDED.hora_fim,
+  valor = EXCLUDED.valor,
+  observacoes = EXCLUDED.observacoes,
+  status = EXCLUDED.status,
+  total_candidaturas = EXCLUDED.total_candidaturas,
+  hospital_id = EXCLUDED.hospital_id,
+  recorrencia_id = EXCLUDED.recorrencia_id,
+  grade_id = EXCLUDED.grade_id;
+
+WITH sul_datas AS (
+  SELECT d::date AS data_plantao, ROW_NUMBER() OVER (ORDER BY d::date) AS rn
+  FROM generate_series(DATE '2026-03-01', DATE '2026-03-31', INTERVAL '1 day') AS d
+  WHERE EXTRACT(ISODOW FROM d) = 4
+),
+sul_candidaturas AS (
+  SELECT
+    data_plantao,
+    (
+      substr(md5('demo-sul-vaga-' || data_plantao::text), 1, 8) || '-' ||
+      substr(md5('demo-sul-vaga-' || data_plantao::text), 9, 4) || '-4' ||
+      substr(md5('demo-sul-vaga-' || data_plantao::text), 14, 3) || '-a' ||
+      substr(md5('demo-sul-vaga-' || data_plantao::text), 18, 3) || '-' ||
+      substr(md5('demo-sul-vaga-' || data_plantao::text), 21, 12)
+    )::uuid AS vaga_id,
+    (
+      substr(md5('demo-sul-candidatura-' || data_plantao::text), 1, 8) || '-' ||
+      substr(md5('demo-sul-candidatura-' || data_plantao::text), 9, 4) || '-4' ||
+      substr(md5('demo-sul-candidatura-' || data_plantao::text), 14, 3) || '-a' ||
+      substr(md5('demo-sul-candidatura-' || data_plantao::text), 18, 3) || '-' ||
+      substr(md5('demo-sul-candidatura-' || data_plantao::text), 21, 12)
+    )::uuid AS candidatura_id,
+    CASE ((rn - 1) % 2)
+      WHEN 0 THEN 'f7777777-7777-4777-8777-777777777777'::uuid
+      ELSE 'f8888888-8888-4888-8888-888888888888'::uuid
+    END AS medico_precadastro_id
+  FROM sul_datas
+)
+INSERT INTO public.candidaturas (
+  id,
+  created_at,
+  data_confirmacao,
+  medico_id,
+  vaga_id,
+  status,
+  updated_at,
+  updated_by,
+  vaga_valor,
+  medico_precadastro_id
+)
+SELECT
+  candidatura_id,
+  NOW(),
+  data_plantao,
+  '9cd29712-91b5-492f-86ff-41e38c7b03d5',
+  vaga_id,
+  'APROVADO',
+  NOW(),
+  '12121212-1212-4121-8121-121212121212',
+  1880,
+  medico_precadastro_id
+FROM sul_candidaturas
 ON CONFLICT (id) DO UPDATE
 SET
   data_confirmacao = EXCLUDED.data_confirmacao,
