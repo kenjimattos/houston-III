@@ -798,7 +798,15 @@ VALUES (
     '3a3a3a3a-3a3a-43a3-83a3-3a3a3a3a3a3a',
     '3b3b3b3b-3b3b-43b3-83b3-3b3b3b3b3b3b'
   ]::uuid[],
-  ARRAY['1382a750-6424-430c-9672-bbd92d3c9eb8']::uuid[]
+  ARRAY[
+    'ae1055f0-4527-460e-8ac5-d81a936ec5f1',
+    'a0dd42c1-689a-4d19-ab06-6ddc329bf39b',
+    '6beadfb3-861d-46fe-8515-16c0c2708204',
+    '93f00415-ab9c-4911-a6cb-197b430d71a1',
+    'd773c3a0-5816-4ee2-8e07-48f8c321789c',
+    '45da1a0b-9a69-4acf-80c1-136e33a6eca1',
+    '1382a750-6424-430c-9672-bbd92d3c9eb8'
+  ]::uuid[]
 )
 ON CONFLICT (user_id, role) DO UPDATE
 SET
@@ -820,7 +828,15 @@ VALUES (
     '3a3a3a3a-3a3a-43a3-83a3-3a3a3a3a3a3a',
     '3b3b3b3b-3b3b-43b3-83b3-3b3b3b3b3b3b'
   ]::uuid[],
-  ARRAY['1382a750-6424-430c-9672-bbd92d3c9eb8']::uuid[]
+  ARRAY[
+    'ae1055f0-4527-460e-8ac5-d81a936ec5f1',
+    'a0dd42c1-689a-4d19-ab06-6ddc329bf39b',
+    '6beadfb3-861d-46fe-8515-16c0c2708204',
+    '93f00415-ab9c-4911-a6cb-197b430d71a1',
+    'd773c3a0-5816-4ee2-8e07-48f8c321789c',
+    '45da1a0b-9a69-4acf-80c1-136e33a6eca1',
+    '1382a750-6424-430c-9672-bbd92d3c9eb8'
+  ]::uuid[]
 )
 ON CONFLICT (user_id, role) DO UPDATE
 SET
@@ -842,7 +858,15 @@ VALUES (
     '3a3a3a3a-3a3a-43a3-83a3-3a3a3a3a3a3a',
     '3b3b3b3b-3b3b-43b3-83b3-3b3b3b3b3b3b'
   ]::uuid[],
-  ARRAY['1382a750-6424-430c-9672-bbd92d3c9eb8']::uuid[]
+  ARRAY[
+    'ae1055f0-4527-460e-8ac5-d81a936ec5f1',
+    'a0dd42c1-689a-4d19-ab06-6ddc329bf39b',
+    '6beadfb3-861d-46fe-8515-16c0c2708204',
+    '93f00415-ab9c-4911-a6cb-197b430d71a1',
+    'd773c3a0-5816-4ee2-8e07-48f8c321789c',
+    '45da1a0b-9a69-4acf-80c1-136e33a6eca1',
+    '1382a750-6424-430c-9672-bbd92d3c9eb8'
+  ]::uuid[]
 )
 ON CONFLICT (user_id, role) DO UPDATE
 SET
