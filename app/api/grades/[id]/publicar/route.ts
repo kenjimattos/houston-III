@@ -496,19 +496,24 @@ export async function POST(
 
         // Criar candidatura se há médico designado
         if (vaga.medicoId && vagaCriada) {
-          const { error: candidaturaError } = await supabase
-            .from('candidaturas')
-            .insert([{
+          // Chamar API /api/candidaturas que já tem a lógica de médico pré-cadastrado
+          const candidaturaResponse = await fetch(`${request.nextUrl.origin}/api/candidaturas`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Cookie': request.headers.get('cookie') || '',
+            },
+            body: JSON.stringify({
               vaga_id: vagaCriada.id,
               medico_id: vaga.medicoId,
               status: 'APROVADO',
               vaga_valor: calculo.valorTotal,
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString(),
-            }])
+            }),
+          })
 
-          if (candidaturaError) {
-            console.error('[API /grades/[id]/publicar] Erro ao criar candidatura:', candidaturaError)
+          if (!candidaturaResponse.ok) {
+            const errorData = await candidaturaResponse.json().catch(() => ({}))
+            console.error('[API /grades/[id]/publicar] Erro ao criar candidatura:', errorData)
             // Deletar vaga órfã
             await supabase.from('vagas').delete().eq('id', vagaCriada.id)
             conflitos++
