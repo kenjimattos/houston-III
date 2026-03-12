@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
-import { getCurrentUser } from "@/services/authService";
 import { updateVaga } from "@/services/vagasService";
 import {
   cancelarCandidaturasDaVaga,
@@ -47,7 +46,12 @@ interface BulkUpdateParams {
   dataFechamento?: Date;
 }
 
-export function useVagasBulkOperations() {
+interface UseVagasBulkOperationsOptions {
+  currentUserId?: string;
+}
+
+export function useVagasBulkOperations(options: UseVagasBulkOperationsOptions = {}) {
+  const { currentUserId } = options;
   const [loading, setLoading] = useState(false);
 
   // Função para aplicar edições em lote
@@ -67,7 +71,6 @@ export function useVagasBulkOperations() {
     } = params;
 
     try {
-      const user = await getCurrentUser();
       const now = getBrazilNowISO();
 
       // Aplicar atualizações para todas as vagas selecionadas
@@ -75,7 +78,7 @@ export function useVagasBulkOperations() {
         let finalVagaUpdate = {
           ...vagaUpdate,
           updated_at: now,
-          updated_by: user.id,
+          updated_by: currentUserId,
         };
 
         // Calcular data de pagamento individual para cada vaga se especificado
@@ -156,7 +159,7 @@ export function useVagasBulkOperations() {
             vagaUpdate: {
               status: "fechada",
               updated_at: now,
-              updated_by: user.id,
+              updated_by: currentUserId,
             },
             selectedBeneficios: [],
           });
@@ -198,7 +201,7 @@ export function useVagasBulkOperations() {
                 vagaUpdate: {
                   status: "aberta",
                   updated_at: now,
-                  updated_by: user.id,
+                  updated_by: currentUserId,
                 },
                 selectedBeneficios: [],
               });
@@ -253,7 +256,6 @@ export function useVagasBulkOperations() {
 
     setLoading(true);
     try {
-      const user = await getCurrentUser();
       const now = getBrazilNowISO();
 
       let countSuccess = 0;
@@ -274,7 +276,7 @@ export function useVagasBulkOperations() {
           vagaUpdate: {
             status: "anunciada",
             updated_at: now,
-            updated_by: user.id,
+            updated_by: currentUserId,
           },
           selectedBeneficios: vaga.beneficios || [],
         });
@@ -327,7 +329,6 @@ export function useVagasBulkOperations() {
 
     setLoading(true);
     try {
-      const user = await getCurrentUser();
       const now = getBrazilNowISO();
 
       let countSuccess = 0;
@@ -353,7 +354,7 @@ export function useVagasBulkOperations() {
             vagaUpdate: {
               status: "cancelada",
               updated_at: now,
-              updated_by: user.id,
+              updated_by: currentUserId,
             },
             selectedBeneficios: vaga.beneficios || [],
           });
@@ -403,7 +404,6 @@ export function useVagasBulkOperations() {
 
     setLoading(true);
     try {
-      const user = await getCurrentUser();
       const now = getBrazilNowISO();
 
       for (const vagaId of selectedVagas) {
@@ -412,7 +412,7 @@ export function useVagasBulkOperations() {
           vagaUpdate: {
             status: "aberta",
             updated_at: now,
-            updated_by: user.id,
+            updated_by: currentUserId,
           },
           selectedBeneficios: [],
         });
@@ -449,7 +449,6 @@ export function useVagasBulkOperations() {
 
     setLoading(true);
     try {
-      const user = await getCurrentUser();
       const now = getBrazilNowISO();
 
       for (const vagaId of selectedVagas) {
@@ -458,7 +457,7 @@ export function useVagasBulkOperations() {
           vagaUpdate: {
             status: "fechada",
             updated_at: now,
-            updated_by: user.id,
+            updated_by: currentUserId,
           },
           selectedBeneficios: [],
         });

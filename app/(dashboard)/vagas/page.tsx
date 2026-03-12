@@ -26,6 +26,7 @@ import { VagaTableRow } from "@/components/vagas/vaga-table-row";
 import { VagasFilters } from "@/components/vagas/vagas-filters";
 import { useGrades } from "@/hooks/grades/useGrades";
 import { useTableSort } from "@/hooks/use-table-sort";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { useVagasActions } from "@/hooks/vagas/useVagasActions";
 import { useVagasData } from "@/hooks/vagas/useVagasData";
 import { useVagasModals } from "@/hooks/vagas/useVagasModals";
@@ -84,6 +85,7 @@ function getBrazilNowISO() {
 }
 
 function VagasPageContent() {
+  const { user: currentUser } = useCurrentUser();
   const [cancelModalOpen, setCancelModalOpen] = useState(false);
   const [reopenVacancyModalOpen, setReopenVacancyModalOpen] = useState(false);
   const [pendingCancellation, setPendingCancellation] = useState<{
@@ -232,6 +234,7 @@ function VagasPageContent() {
     handleCloseVaga,
     handleReopenVaga,
   } = useVagasActions({
+    currentUserId: currentUser?.id,
     onRefreshData: unifiedRefreshData,
     onClearSelection: clearSelection,
   });

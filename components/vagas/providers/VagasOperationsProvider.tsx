@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, ReactNode } from "react";
+import { useCurrentUser } from "@/contexts/CurrentUserContext";
 import { useVagasBulkOperations } from "@/hooks/vagas/useVagasBulkOperations";
 import { useVagasSelection } from "@/hooks/vagas/useVagasSelection";
 import { useVagasCommonData } from "@/hooks/vagas/useVagasCommonData";
@@ -76,8 +77,9 @@ interface VagasOperationsProviderProps {
 
 export function VagasOperationsProvider({ children }: VagasOperationsProviderProps) {
   // Hooks básicos
+  const { user: currentUser } = useCurrentUser();
   const selection = useVagasSelection();
-  const bulkOperations = useVagasBulkOperations();
+  const bulkOperations = useVagasBulkOperations({ currentUserId: currentUser?.id });
   const commonData = useVagasCommonData();
 
   const contextValue: VagasOperationsContextType = {
@@ -139,6 +141,7 @@ export function useVagasOperationsWithActions(config: {
   vagaCandidaturas?: Record<string, any[]>;
 }) {
   const operations = useVagasOperations();
+  const { user: currentUser } = useCurrentUser();
 
   let actionsConfig = useVagasActionsConfig({
     selectedVagas: operations.selectedVagas,
@@ -154,6 +157,7 @@ export function useVagasOperationsWithActions(config: {
     onDeleteVaga: config.onDeleteVaga,
     onBulkEdit: config.onBulkEdit,
     vagaCandidaturas: config.vagaCandidaturas,
+    currentUserId: currentUser?.id,
   });
   
   return {

@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from "react";
 import { toast } from "@/components/ui/use-toast";
-import { getCurrentUser } from "@/services/authService";
 import { updateVaga } from "@/services/vagasService";
 import {
   cancelarCandidaturasDaVaga,
@@ -18,12 +17,13 @@ function getBrazilNowISO() {
 }
 
 interface UseVagasActionsOptions {
+  currentUserId?: string;
   onRefreshData?: () => Promise<void>;
   onClearSelection?: () => void;
 }
 
 export function useVagasActions(options: UseVagasActionsOptions = {}) {
-  const { onRefreshData, onClearSelection } = options;
+  const { currentUserId, onRefreshData, onClearSelection } = options;
 
   const [actionLoading, setActionLoading] = useState(false);
   const [lastAction, setLastAction] = useState<string | null>(null);
@@ -37,7 +37,6 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
     setLastAction('cancel');
 
     try {
-      const user = await getCurrentUser();
       const now = getBrazilNowISO();
 
       let countSuccess = 0;
@@ -56,7 +55,7 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
         try {
           console.log("🔧 DEBUG cancelamento - vaga:", {
             vaga_id: vagaId,
-            user_id: user.id,
+            user_id: currentUserId,
             beneficios_type: typeof vaga.beneficios,
             beneficios_value: vaga.beneficios
           });
@@ -70,7 +69,7 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
             vagaUpdate: {
               status: "cancelada",
               updated_at: now,
-              updated_by: user.id,
+              updated_by: currentUserId,
             },
             selectedBeneficios: Array.isArray(vaga.beneficios) ? vaga.beneficios : [],
           });
@@ -116,7 +115,7 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
       setActionLoading(false);
       setLastAction(null);
     }
-  }, [onRefreshData, onClearSelection]);
+  }, [currentUserId, onRefreshData, onClearSelection]);
 
   // Função unificada para excluir vagas canceladas
   const handleDeleteVaga = useCallback(async (vagaIds: string | string[], isBulk = false) => {
@@ -167,7 +166,6 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
     setLastAction('announce');
 
     try {
-      const user = await getCurrentUser();
       const now = getBrazilNowISO();
 
       await updateVaga({
@@ -175,7 +173,7 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
         vagaUpdate: {
           status: "anunciada",
           updated_at: now,
-          updated_by: user.id,
+          updated_by: currentUserId,
         },
         selectedBeneficios: vaga.beneficios || [],
       });
@@ -200,7 +198,7 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
       setActionLoading(false);
       setLastAction(null);
     }
-  }, [onRefreshData]);
+  }, [currentUserId, onRefreshData]);
 
   // Função para fechar vaga
   const handleCloseVaga = useCallback(async (vagaId: string, vagasData: any[]) => {
@@ -211,7 +209,6 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
     setLastAction('close');
 
     try {
-      const user = await getCurrentUser();
       const now = getBrazilNowISO();
 
       await updateVaga({
@@ -219,7 +216,7 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
         vagaUpdate: {
           status: "fechada",
           updated_at: now,
-          updated_by: user.id,
+          updated_by: currentUserId,
         },
         selectedBeneficios: vaga.beneficios || [],
       });
@@ -244,7 +241,7 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
       setActionLoading(false);
       setLastAction(null);
     }
-  }, [onRefreshData]);
+  }, [currentUserId, onRefreshData]);
 
   // Função para reativar vaga
   const handleReactivateVaga = useCallback(async (vagaId: string, vagasData: any[]) => {
@@ -255,7 +252,6 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
     setLastAction('reactivate');
 
     try {
-      const user = await getCurrentUser();
       const now = getBrazilNowISO();
 
       // Reativar candidaturas da vaga
@@ -267,7 +263,7 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
         vagaUpdate: {
           status: "aberta",
           updated_at: now,
-          updated_by: user.id,
+          updated_by: currentUserId,
         },
         selectedBeneficios: vaga.beneficios || [],
       });
@@ -292,7 +288,7 @@ export function useVagasActions(options: UseVagasActionsOptions = {}) {
       setActionLoading(false);
       setLastAction(null);
     }
-  }, [onRefreshData]);
+  }, [currentUserId, onRefreshData]);
 
   // Função para reabrir vaga
   const handleReopenVaga = useCallback(async (vagaId: string) => {

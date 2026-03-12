@@ -65,6 +65,7 @@ interface UseVagasActionsConfigProps {
 
   // Contadores para context menu
   vagaCandidaturas?: Record<string, any[]>;
+  currentUserId?: string;
 }
 
 export function useVagasActionsConfig({
@@ -81,6 +82,7 @@ export function useVagasActionsConfig({
   onDeleteVaga,
   onBulkEdit,
   vagaCandidaturas = {},
+  currentUserId,
 }: UseVagasActionsConfigProps) {
   const {
     loading,
@@ -89,7 +91,7 @@ export function useVagasActionsConfig({
     handleBulkReativar,
     handleBulkFechar,
     handleBulkDelete,
-  } = useVagasBulkOperations();
+  } = useVagasBulkOperations({ currentUserId });
 
   // Análise do status das vagas selecionadas
   const statusAnalysis = useMemo(() => {

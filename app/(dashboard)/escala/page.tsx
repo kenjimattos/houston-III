@@ -127,6 +127,7 @@ function EscalaPageContent() {
     handleReactivateVaga: handleReactivateVagaFromHook,
     handleCloseVaga,
   } = useVagasActions({
+    currentUserId: currentUser?.id,
     onRefreshData: async () => {
       await handleDataChange();
     },
