@@ -3,3 +3,4 @@
 export * from "./vagas-candidaturas";
 export * from "./notifications";
 export * from "./pagamentos";
+export * from "./user-session";
